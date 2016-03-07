@@ -124,6 +124,7 @@ Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minut
 #p <- p + facet_grid(. ~ day)
 
 ## baby is sick and up crying with a double-ear infection,,,,  gotta call this a night...
+
 library(lattice)
 attach(ds3)
 densityplot(~steps|day)
