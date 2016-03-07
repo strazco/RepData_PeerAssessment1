@@ -66,7 +66,67 @@ print(TotNa)
 ```
 
 
+Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
+```{r, echo=TRUE}
+# clone the original
+ds3 <- ds
+
+# fill in the NAs with means for that period
+ds3$steps[is.na(ds3$steps)] <- tapply(ds3$steps, ds3$interval, mean, na.rm = TRUE)
+
+```
+
+
+```{r, echo=TRUE}
+TotSteps2 <- tapply(ds3$steps, ds3$date, sum, na.rm=TRUE)
+
+qplot(TotSteps2)
+
+mean(TotSteps2)
+median(TotSteps2)
+```
+
+Measure | Original | Modified | Difference
+--------|----------|----------|------------
+Mean    |   9354  |   10766  |   +1412  
+Median  |   10395  |   10766  |    +371
+
+### The impact of imputing missing data (with the mean of the prevailing time slice) has:
+1. Raised both the mean and the median
+2. Caused the mean and median to converge
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+
+```{r, echo=TRUE}
+# clone the original
+ds3$day <- "weekday"
+ds3$day[weekdays(as.POSIXlt(ds3$date)) == "Saturday"] <- "weekend"
+ds3$day[weekdays(as.POSIXlt(ds3$date)) == "Saturday"] <- "weekend"
+as.factor(ds3$day)
+
+```
+
+Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
+
+```{r, echo=TRUE}
+#AvgSteps2 <- with(ds3[ds3$day == "weekend", ], tapply(ds3$steps, ds3$interval, mean))
+#
+#ds4 <- data.frame(time=names(AvgSteps2),avgsteps=AvgSteps2)
+#AvgSteps3 <- with(ds3[ds3$day == "weekend", ], tapply(ds3$steps, ds3$interval, mean))
+
+
+#p <- ggplot(ds4, aes(intervals, avgsteps))
+#p <- p + geom_line(color="blue",lwd=2)
+#p <- p + facet_grid(. ~ day)
+
+## baby is sick and up crying with a double-ear infection,,,,  gotta call this a night...
+library(lattice)
+attach(ds3)
+densityplot(~steps|day)
+
+```
+
