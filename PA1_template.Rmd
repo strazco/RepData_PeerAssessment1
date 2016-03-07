@@ -9,17 +9,63 @@ keep_md: true
 
 ## Loading and preprocessing the data
 
+```{r, echo=TRUE}
+# activity.zip is already included in our clone of the repository 
+unzip("activity.zip", overwrite = TRUE)
+ds <- read.csv("activity.csv")
+
+# coerce to factor
+ds$interval <- as.factor(ds$interval)
+
+# going to need these later for charting purposes
+intervals <- as.numeric(levels(ds$interval))
+
+```
 
 
 ## What is mean total number of steps taken per day?
 
+```{r, echo=TRUE}
+TotSteps <- tapply(ds$steps, ds$date, sum, na.rm=TRUE)
+
+library(ggplot2)
+qplot(TotSteps)
+
+mean(TotSteps)
+median(TotSteps)
+```
 
 
 ## What is the average daily activity pattern?
 
+```{r, echo=TRUE}
 
+AvgSteps <- tapply(ds$steps, ds$interval, mean, na.rm=TRUE)
+ds2 <- data.frame(time=names(AvgSteps),avgsteps=AvgSteps)
+
+p <- ggplot(ds2, aes(intervals, avgsteps))
+p <- p + geom_line(color="blue",lwd=2)
+p <- p + ggtitle("Time series plot of the average number of steps taken")
+
+p
+
+```
+
+```{r, echo=TRUE}
+# Which time slice has the most average steps?
+MaxSteps <- which.max(ds2$avgsteps)
+names(MaxSteps)
+```
 
 ## Imputing missing values
+
+```{r, echo=TRUE}
+# Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+TotNa <- sum(is.na(ds$steps))
+print(TotNa)
+```
+
+
 
 
 
