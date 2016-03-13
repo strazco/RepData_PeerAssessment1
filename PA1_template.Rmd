@@ -2,7 +2,8 @@
 title: "Reproducible Research: Peer Assessment 1"
 author: "Andrew Strasman"
 output: 
-html_document:
+  md_document:
+    variant: markdown_github
 keep_md: true
 ---
 
